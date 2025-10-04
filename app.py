@@ -1,13 +1,29 @@
+# app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+from sklearn.compose import ColumnTransformer
+import sklearn
+
+# Fix for the missing attribute error
+try:
+    from sklearn.compose._column_transformer import _RemainderColsList
+except ImportError:
+    class _RemainderColsList(list):
+        pass
 
 st.set_page_config(page_title="SL Yield Predictor", page_icon="🌾", layout="centered")
 
 @st.cache_resource
 def load_model():
     try:
+        # Register the missing class before loading
+        import sys
+        module = sys.modules['sklearn.compose._column_transformer']
+        if not hasattr(module, '_RemainderColsList'):
+            setattr(module, '_RemainderColsList', _RemainderColsList)
+        
         model = joblib.load("best_model_tuned.joblib")
         return model
     except Exception as e:
