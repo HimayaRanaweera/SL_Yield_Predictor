@@ -6,13 +6,6 @@ import joblib
 from sklearn.compose import ColumnTransformer
 import sklearn
 
-# Fix for the missing attribute error
-try:
-    from sklearn.compose._column_transformer import _RemainderColsList
-except ImportError:
-    class _RemainderColsList(list):
-        pass
-
 st.set_page_config(page_title="SL Yield Predictor", page_icon="🌾", layout="centered")
 
 @st.cache_resource
